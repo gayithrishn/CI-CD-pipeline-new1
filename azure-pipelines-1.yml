@@ -7,13 +7,19 @@ trigger:
 - main
 
 pool:
-  name: 'MyLocalPool'   # your self-hosted agent
+  name: 'MyLocalPool'
 
 steps:
 - checkout: self
 
 - script: mvn clean test
   displayName: 'Build and Run Unit Tests'
+
+- task: PublishTestResults@2
+  inputs:
+    testResultsFiles: '**/target/surefire-reports/TEST-*.xml'
+    testResultsFormat: 'JUnit'
+  displayName: 'Publish Test Results'
 
 - task: PublishBuildArtifacts@1
   inputs:
