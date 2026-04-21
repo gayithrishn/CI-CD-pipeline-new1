@@ -7,9 +7,17 @@ trigger:
 - main
 
 pool:
-  vmImage: ubuntu-latest
+  name: 'MyLocalPool'   # your self-hosted agent
 
-- task: Maven@3
+steps:
+- checkout: self
+
+- script: mvn clean test
+  displayName: 'Build and Run Unit Tests'
+
+- task: PublishBuildArtifacts@1
   inputs:
-    mavenPomFile: 'pom.xml'
-    goals: 'clean package'
+    PathtoPublish: 'target'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
+  displayName: 'Publish Build Artifacts'
